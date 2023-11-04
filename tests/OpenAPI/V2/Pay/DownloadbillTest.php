@@ -20,9 +20,9 @@ use PHPUnit\Framework\TestCase;
 
 class DownloadbillTest extends TestCase
 {
-    private const CSV_DATA_LINE_MAXIMUM_BYTES = 1024;
-    private const CSV_DATA_FIRST_BYTE = '`';
-    private const CSV_DATA_SEPERATOR = ',`';
+    const CSV_DATA_LINE_MAXIMUM_BYTES = 1024;
+    const CSV_DATA_FIRST_BYTE = '`';
+    const CSV_DATA_SEPERATOR = ',`';
 
     /** @var MockHandler $mock */
     private $mock;
@@ -92,9 +92,9 @@ class DownloadbillTest extends TestCase
      * @param array<string,string> $data
      * @param ResponseInterface $respondor
      */
-    public function testPost(string $mchid, array $data, ResponseInterface $respondor): void
+    public function testPost(string $mchid, array $data, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->prepareEnvironment($mchid);
+        list($endpoint, $stack) = $this->prepareEnvironment($mchid);
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -116,7 +116,7 @@ class DownloadbillTest extends TestCase
      * @param ResponseInterface $response
      * @param boolean $testFinished
      */
-    private static function responseAssertion(ResponseInterface $response, bool $testFinished = false): void
+    private static function responseAssertion(ResponseInterface $response, bool $testFinished = false)
     {
         $stream = $response->getBody();
         $stream->tell() && $stream->rewind();
@@ -157,9 +157,9 @@ class DownloadbillTest extends TestCase
      * @param array<string,string> $data
      * @param ResponseInterface $respondor
      */
-    public function testPostAsync(string $mchid, array $data, ResponseInterface $respondor): void
+    public function testPostAsync(string $mchid, array $data, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->prepareEnvironment($mchid);
+        list($endpoint, $stack) = $this->prepareEnvironment($mchid);
 
         $this->mock->reset();
         $this->mock->append($respondor);

@@ -1,5 +1,7 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 // load autoload.php
 $possibleFiles = [__DIR__.'/../vendor/autoload.php', __DIR__.'/../../../autoload.php', __DIR__.'/../../autoload.php'];
@@ -29,9 +31,9 @@ use WeChatPay\Crypto\AesGcm;
   */
 class CertificateDownloader
 {
-    private const DEFAULT_BASE_URI = 'https://api.mch.weixin.qq.com/';
+    private static $defaultBaseURI = 'https://api.mch.weixin.qq.com/';
 
-    public function run(): void
+    public function run()
     {
         $opts = $this->parseOpts();
 
@@ -74,7 +76,7 @@ class CertificateDownloader
      *
      * @return void
      */
-    private function job(array $opts): void
+    private function job(array $opts)
     {
         static $certs = ['any' => null];
 
@@ -86,7 +88,7 @@ class CertificateDownloader
             'serial'     => $opts['serialno'],
             'privateKey' => \file_get_contents((string)$opts['privatekey']),
             'certs'      => &$certs,
-            'base_uri'   => (string)($opts['baseuri'] ?? self::DEFAULT_BASE_URI),
+            'base_uri'   => (string)($opts['baseuri'] ?? self::$defaultBaseURI),
         ]);
 
         /** @var \GuzzleHttp\HandlerStack $stack */
@@ -156,15 +158,15 @@ class CertificateDownloader
     /**
      * @param string $messages
      */
-    private static function prompt(...$messages): void
+    private static function prompt(...$messages)
     {
-        \array_walk($messages, static function (string $message): void { \printf('%s%s', $message, \PHP_EOL); });
+        \array_walk($messages, static function (string $message) { \printf('%s%s', $message, \PHP_EOL); });
     }
 
     /**
-     * @return ?array<string,string|true>
+     * @return ?array<string, string|true>
      */
-    private function parseOpts(): ?array
+    private function parseOpts()
     {
         $opts = [
             [ 'key', 'k', true ],
@@ -179,7 +181,7 @@ class CertificateDownloader
         $shortopts = 'hV';
         $longopts = [ 'help', 'version' ];
         foreach ($opts as $opt) {
-            [$key, $alias] = $opt;
+            list($key, $alias) = $opt;
             $shortopts .= $alias . ':';
             $longopts[] = $key . ':';
         }
@@ -191,7 +193,7 @@ class CertificateDownloader
 
         $args = [];
         foreach ($opts as $opt) {
-            [$key, $alias, $mandatory] = $opt;
+            list($key, $alias, $mandatory) = $opt;
             if (isset($parsed[$key]) || isset($parsed[$alias])) {
                 /** @var string|string[] $possible */
                 $possible = $parsed[$key] ?? $parsed[$alias] ?? '';
@@ -210,7 +212,7 @@ class CertificateDownloader
         return $args;
     }
 
-    private function printHelp(): void
+    private function printHelp()
     {
         self::prompt(
             'Usage: 微信支付平台证书下载工具 [-hV]',
@@ -224,7 +226,7 @@ class CertificateDownloader
             '  -k, --key=<apiv3Key>       APIv3密钥',
             '  -o, --output=[outputFilePath]',
             '                             下载成功后保存证书的路径，可选，默认为临时文件目录夹',
-            '  -u, --baseuri=[baseUri]    接入点，可选，默认为 ' . self::DEFAULT_BASE_URI,
+            '  -u, --baseuri=[baseUri]    接入点，可选，默认为 ' . self::$defaultBaseURI,
             '  -V, --version              Print version information and exit.',
             '  -h, --help                 Show this help message and exit.', ''
         );

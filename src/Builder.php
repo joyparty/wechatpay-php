@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay;
 
@@ -47,9 +49,10 @@ final class Builder
             /**
              * Compose the chainable `ClientDecorator` instance, most starter with the tree root point
              * @param string[] $input
-             * @param ?ClientDecoratorInterface $instance
+             * @param ClientDecoratorInterface|null $instance
              */
-            public function __construct(array $input = [], ?ClientDecoratorInterface $instance = null) {
+            public function __construct(array $input = [], $instance = null)
+            {
                 parent::__construct($input, self::STD_PROP_LIST | self::ARRAY_AS_PROPS);
 
                 $this->setDriver($instance);

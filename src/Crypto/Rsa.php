@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay\Crypto;
 
@@ -40,33 +42,35 @@ use UnexpectedValueException;
 class Rsa
 {
     /** @var string - Type string of the asymmetric key */
-    public const KEY_TYPE_PUBLIC = 'public';
+    const KEY_TYPE_PUBLIC = 'public';
     /** @var string - Type string of the asymmetric key */
-    public const KEY_TYPE_PRIVATE = 'private';
+    const KEY_TYPE_PRIVATE = 'private';
 
-    private const LOCAL_FILE_PROTOCOL = 'file://';
-    private const PKEY_PEM_NEEDLE = ' KEY-';
-    private const PKEY_PEM_FORMAT = "-----BEGIN %1\$s KEY-----\n%2\$s\n-----END %1\$s KEY-----";
-    private const PKEY_PEM_FORMAT_PATTERN = '#-{5}BEGIN ((?:RSA )?(?:PUBLIC|PRIVATE)) KEY-{5}\r?\n([^-]+)\r?\n-{5}END \1 KEY-{5}#';
-    private const CHR_CR = "\r";
-    private const CHR_LF = "\n";
+    const PKEY_PEM_FORMAT = "-----BEGIN %1\$s KEY-----\n%2\$s\n-----END %1\$s KEY-----";
 
-    /** @var array<string,array{string,string,int}> - Supported loading rules */
-    private const RULES = [
-        'private.pkcs1' => [self::PKEY_PEM_FORMAT, 'RSA PRIVATE', 16],
-        'private.pkcs8' => [self::PKEY_PEM_FORMAT, 'PRIVATE',     16],
-        'public.pkcs1'  => [self::PKEY_PEM_FORMAT, 'RSA PUBLIC',  15],
-        'public.spki'   => [self::PKEY_PEM_FORMAT, 'PUBLIC',      14],
-    ];
+    private static $localFileProtocol = 'file://';
+    private static $pkeyPemNeedle = ' KEY-';
+    private static $pkeyPemFormatPattern  = '#-{5}BEGIN ((?:RSA )?(?:PUBLIC|PRIVATE)) KEY-{5}\r?\n([^-]+)\r?\n-{5}END \1 KEY-{5}#';
+    private static $chrCR = '\r';
+    private static $chrLF = '\n';
+    private static $chrNul = '\0';
+    private static $chrEtx = '\3';
 
     /**
      * @var string - Equal to `sequence(oid(1.2.840.113549.1.1.1), null))`
      * @link https://datatracker.ietf.org/doc/html/rfc3447#appendix-A.2
      */
-    private const ASN1_OID_RSAENCRYPTION = '300d06092a864886f70d0101010500';
-    private const ASN1_SEQUENCE = 48;
-    private const CHR_NUL = "\0";
-    private const CHR_ETX = "\3";
+    private static $asn1OidRsaEncryption = '300d06092a864886f70d0101010500';
+
+    private static $asn1Sequence = 48;
+
+    /** @var array<string,array{string,string,int}> - Supported loading rules */
+    private static $rules = [
+        'private.pkcs1' => [self::PKEY_PEM_FORMAT, 'RSA PRIVATE', 16],
+        'private.pkcs8' => [self::PKEY_PEM_FORMAT, 'PRIVATE',     16],
+        'public.pkcs1'  => [self::PKEY_PEM_FORMAT, 'RSA PUBLIC',  15],
+        'public.spki'   => [self::PKEY_PEM_FORMAT, 'PUBLIC',      14],
+    ];
 
     /**
      * Translate the \$thing strlen from `X690` style to the `ASN.1` 128bit hexadecimal length string
@@ -82,7 +86,7 @@ class Rsa
             return sprintf('%c', $num);
         }
 
-        $tmp = ltrim(pack('N', $num), self::CHR_NUL);
+        $tmp = ltrim(pack('N', $num), self::$chrNul);
         return pack('Ca*', strlen($tmp) | 0x80, $tmp);
     }
 
@@ -95,10 +99,10 @@ class Rsa
      */
     public static function pkcs1ToSpki(string $thing): string
     {
-        $raw = self::CHR_NUL . base64_decode($thing);
-        $new = pack('H*', self::ASN1_OID_RSAENCRYPTION) . self::CHR_ETX . self::encodeLength($raw) . $raw;
+        $raw = self::$chrNul . base64_decode($thing);
+        $new = pack('H*', self::$asn1OidRsaEncryption) . self::$chrEtx . self::encodeLength($raw) . $raw;
 
-        return base64_encode(pack('Ca*a*', self::ASN1_SEQUENCE, self::encodeLength($new), $new));
+        return base64_encode(pack('Ca*a*', self::$asn1Sequence, self::encodeLength($new), $new));
     }
 
     /**
@@ -210,26 +214,26 @@ class Rsa
     {
         $src = $thing;
 
-        if (is_string($src) && is_int(strpos($src, self::PKEY_PEM_NEEDLE))
-            && $type === static::KEY_TYPE_PUBLIC && preg_match(self::PKEY_PEM_FORMAT_PATTERN, $src, $matches)) {
-            [, $kind, $base64] = $matches;
-            $mapRules = (array)array_combine(array_column(self::RULES, 1/*column*/), array_keys(self::RULES));
+        if (is_string($src) && is_int(strpos($src, self::$pkeyPemNeedle))
+            && $type === static::KEY_TYPE_PUBLIC && preg_match(self::$pkeyPemFormatPattern, $src, $matches)) {
+            list($_, $kind, $base64) = $matches;
+            $mapRules = (array)array_combine(array_column(self::$rules, 1/*column*/), array_keys(self::$rules));
             $protocol = $mapRules[$kind] ?? '';
             if ('public.pkcs1' === $protocol) {
-                $src = sprintf('%s://%s', $protocol, str_replace([self::CHR_CR, self::CHR_LF], '', $base64));
+                $src = sprintf('%s://%s', $protocol, str_replace([self::$chrCR, self::$chrLF], '', $base64));
             }
         }
 
-        if (is_string($src) && is_bool(strpos($src, self::LOCAL_FILE_PROTOCOL)) && is_int(strpos($src, '://'))) {
+        if (is_string($src) && is_bool(strpos($src, self::$localFileProtocol)) && is_int(strpos($src, '://'))) {
             $protocol = parse_url($src, PHP_URL_SCHEME);
-            [$format, $kind, $offset] = self::RULES[$protocol] ?? [null, null, null];
+            list($format, $kind, $offset) = self::$rules[$protocol] ?? [null, null, null];
             if ($format && $kind && $offset) {
                 $src = substr($src, $offset);
                 if ('public.pkcs1' === $protocol) {
                     $src = static::pkcs1ToSpki($src);
-                    [$format, $kind] = self::RULES['public.spki'];
+                    list($format, $kind) = self::$rules['public.spki'];
                 }
-                return sprintf($format, $kind, wordwrap($src, 64, self::CHR_LF, true));
+                return sprintf($format, $kind, wordwrap($src, 64, self::$chrLF, true));
             }
         }
 
@@ -250,7 +254,7 @@ class Rsa
      *
      * @throws UnexpectedValueException
      */
-    private static function paddingModeLimitedCheck(int $padding): void
+    private static function paddingModeLimitedCheck(int $padding)
     {
         if (!($padding === OPENSSL_PKCS1_OAEP_PADDING || $padding === OPENSSL_PKCS1_PADDING)) {
             throw new UnexpectedValueException(sprintf("Doesn't supported padding mode(%d), here only support OPENSSL_PKCS1_OAEP_PADDING or OPENSSL_PKCS1_PADDING.", $padding));

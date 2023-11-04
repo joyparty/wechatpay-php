@@ -25,14 +25,14 @@ use PHPUnit\Framework\TestCase;
 
 class RsaTest extends TestCase
 {
-    private const BASE64_EXPRESSION = '#^[a-zA-Z0-9\+/]+={0,2}$#';
+    const BASE64_EXPRESSION = '#^[a-zA-Z0-9\+/]+={0,2}$#';
 
-    private const FIXTURES = __DIR__ . '/../fixtures/mock.%s.%s';
+    const FIXTURES = __DIR__ . '/../fixtures/mock.%s.%s';
 
-    private const EVELOPE = '#-{5}BEGIN[^-]+-{5}\r?\n(?<base64>[^-]+)\r?\n-{5}END[^-]+-{5}#';
+    const EVELOPE = '#-{5}BEGIN[^-]+-{5}\r?\n(?<base64>[^-]+)\r?\n-{5}END[^-]+-{5}#';
 
 
-    public function testClassConstants(): void
+    public function testClassConstants()
     {
         self::assertIsString(Rsa::KEY_TYPE_PRIVATE);
         self::assertIsString(Rsa::KEY_TYPE_PUBLIC);
@@ -52,7 +52,7 @@ class RsaTest extends TestCase
         return str_replace(["\r", "\n"], '', $matches['base64'] ?: '');
     }
 
-    public function testFromPkcs8(): void
+    public function testFromPkcs8()
     {
         $thing = $this->getMockContents('pkcs8', 'key');
 
@@ -72,13 +72,13 @@ class RsaTest extends TestCase
         }
     }
 
-    public function testPkcs1ToSpki(): void
+    public function testPkcs1ToSpki()
     {
         /**
          * @var string $spki
          * @var string $pkcs1
          */
-        [, , [$spki], [$pkcs1]] = array_values($this->keyPhrasesDataProvider());
+        list(, , list($spki), list($pkcs1)) = array_values($this->keyPhrasesDataProvider());
 
         self::assertStringStartsWith('public.spki://', $spki);
         self::assertStringStartsWith('public.pkcs1://', $pkcs1);
@@ -101,7 +101,7 @@ class RsaTest extends TestCase
      *
      * @param string $thing
      */
-    public function testFromPkcs1(string $thing, string $type): void
+    public function testFromPkcs1(string $thing, string $type)
     {
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression(self::BASE64_EXPRESSION, $thing);
@@ -118,7 +118,7 @@ class RsaTest extends TestCase
         }
     }
 
-    public function testFromSpki(): void
+    public function testFromSpki()
     {
         $thing = $this->getMockContents('spki', 'pem');
 
@@ -180,7 +180,7 @@ class RsaTest extends TestCase
      *
      * @param \OpenSSLAsymmetricKey|resource|string|mixed $thing
      */
-    public function testFrom($thing, string $type): void
+    public function testFrom($thing, string $type)
     {
         $pkey = Rsa::from($thing, $type);
 
@@ -202,15 +202,15 @@ class RsaTest extends TestCase
          * @var string $pri1
          * @var string $pri2
          */
-        [
-            [$pri1], [$pri2],
-            [$pub1], [$pub2],
-            [$pri3], [$pri4], [$pri5], [$pri6],
-            [$pri7], [$pri8], [$pri9], [$pri0],
-            [$pub3], [$pub4], [$pub5], [$pub6],
-            [$pub7], [$crt1], [$crt2], [$crt3]
-            ,[$encryptedKey1] ,[$encryptedKey2]
-        ] = array_values($this->keyPhrasesDataProvider());
+        list(
+            list($pri1), list($pri2),
+            list($pub1), list($pub2),
+            list($pri3), list($pri4), list($pri5), list($pri6),
+            list($pri7), list($pri8), list($pri9), list($pri0),
+            list($pub3), list($pub4), list($pub5), list($pub6),
+            list($pub7), list($crt1), list($crt2), list($crt3),
+            list($encryptedKey1), list($encryptedKey2)
+        ) = array_values($this->keyPhrasesDataProvider());
 
         $keys = [
             'plaintext, `public.spki://`, `private.pkcs1://`'        => [random_bytes( 8), Rsa::fromSpki(substr($pub1, 14)), Rsa::fromPkcs1(substr($pri1, 16))],
@@ -239,7 +239,7 @@ class RsaTest extends TestCase
      * @param string $plaintext
      * @param object|resource|mixed $publicKey
      */
-    public function testEncrypt(string $plaintext, $publicKey): void
+    public function testEncrypt(string $plaintext, $publicKey)
     {
         $ciphertext = Rsa::encrypt($plaintext, $publicKey);
         self::assertIsString($ciphertext);
@@ -258,7 +258,7 @@ class RsaTest extends TestCase
      * @param object|resource|mixed $publicKey
      * @param object|resource|mixed $privateKey
      */
-    public function testDecrypt(string $plaintext, $publicKey, $privateKey): void
+    public function testDecrypt(string $plaintext, $publicKey, $privateKey)
     {
         $ciphertext = Rsa::encrypt($plaintext, $publicKey);
         self::assertIsString($ciphertext);
@@ -280,7 +280,10 @@ class RsaTest extends TestCase
      */
     public function crossPaddingPhrasesProvider(): array
     {
-        [, , , , , , , [$privateKey], , , , , , [$publicKey]] = array_values($this->keyPhrasesDataProvider());
+        list(, , , , , , , $privateKeys, , , , , , $publicKeys) = array_values($this->keyPhrasesDataProvider());
+        $privateKey = $privateKeys[0];
+        $publicKey = $publicKeys[0];
+
         return [
             'encrypted as OPENSSL_PKCS1_OAEP_PADDING, and decrpted as OPENSSL_PKCS1_PADDING'  => [
                 random_bytes(32), [$publicKey, OPENSSL_PKCS1_OAEP_PADDING], [$privateKey, OPENSSL_PKCS1_PADDING], UnexpectedValueException::class
@@ -305,9 +308,8 @@ class RsaTest extends TestCase
      * @param ?class-string<\UnexpectedValueException> $exception
      */
     public function testCrossEncryptDecryptWithDifferentPadding(
-        string $plaintext, array $publicKeyAndPaddingMode, array $privateKeyAndPaddingMode, ?string $exception = null
-    ): void
-    {
+        string $plaintext, array $publicKeyAndPaddingMode, array $privateKeyAndPaddingMode, $exception = null
+    ) {
         if ($exception) {
             $this->expectException($exception);
         }
@@ -326,7 +328,7 @@ class RsaTest extends TestCase
      * @param object|resource|mixed $publicKey
      * @param object|resource|mixed $privateKey
      */
-    public function testSign(string $plaintext, $publicKey, $privateKey): void
+    public function testSign(string $plaintext, $publicKey, $privateKey)
     {
         $signature = Rsa::sign($plaintext, $privateKey);
 
@@ -346,7 +348,7 @@ class RsaTest extends TestCase
      * @param object|resource|mixed $publicKey
      * @param object|resource|mixed $privateKey
      */
-    public function testVerify(string $plaintext, $publicKey, $privateKey): void
+    public function testVerify(string $plaintext, $publicKey, $privateKey)
     {
         $signature = Rsa::sign($plaintext, $privateKey);
 

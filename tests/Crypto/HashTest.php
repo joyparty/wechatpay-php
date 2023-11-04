@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class HashTest extends TestCase
 {
-    public function testClassConstants(): void
+    public function testClassConstants()
     {
         self::assertIsString(Hash::ALGO_MD5);
         self::assertIsString(Hash::ALGO_HMAC_SHA256);
@@ -71,7 +71,7 @@ class HashTest extends TestCase
      * @param string $action
      * @param int $length
      */
-    public function testMd5(string $thing, string $key, $agency, string $excepted, string $action, int $length): void
+    public function testMd5(string $thing, string $key, $agency, string $excepted, string $action, int $length)
     {
         $digest = Hash::md5($thing, $key, $agency);
 
@@ -124,7 +124,7 @@ class HashTest extends TestCase
      * @param string $action
      * @param int $length
      */
-    public function testHmac(string $thing, string $key, string $algorithm, string $excepted, string $action, int $length): void
+    public function testHmac(string $thing, string $key, string $algorithm, string $excepted, string $action, int $length)
     {
         $digest = Hash::hmac($thing, $key, $algorithm);
 
@@ -154,7 +154,7 @@ class HashTest extends TestCase
      * @param ?string $user
      * @param bool $excepted
      */
-    public function testEquals(string $known, ?string $user = null, bool $excepted = false): void
+    public function testEquals(string $known, $user = null, bool $excepted = false)
     {
         $result = Hash::equals($known, $user);
         self::assertIsBool($result);
@@ -203,7 +203,7 @@ class HashTest extends TestCase
      * @param string $action
      * @param ?int $length
      */
-    public function testSign(string $thing, string $key, string $type, string $excepted, string $action, ?int $length = null): void
+    public function testSign(string $thing, string $key, string $type, string $excepted, string $action, $length = null)
     {
         $digest = Hash::sign($type, $thing, $key);
         if (is_null($length)) {

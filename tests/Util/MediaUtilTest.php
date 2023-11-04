@@ -19,8 +19,8 @@ use PHPUnit\Framework\TestCase;
 
 class MediaUtilTest extends TestCase
 {
-    private const ALGO_SHA256 = 'sha256';
-    private const FOPEN_MODE_BINARYREAD = 'rb';
+    const ALGO_SHA256 = 'sha256';
+    const FOPEN_MODE_BINARYREAD = 'rb';
 
     /**
      * @return array<string,array{string,StreamInterface|null,string,string}>
@@ -71,7 +71,7 @@ class MediaUtilTest extends TestCase
      * @param string $expectedFilename
      * @param string $expectedSha256Digest
      */
-    public function testConstructor($file, $stream = null, string $expectedFilename = '', string $expectedSha256Digest = ''): void
+    public function testConstructor($file, $stream = null, string $expectedFilename = '', string $expectedSha256Digest = '')
     {
         $util = new MediaUtil($file, $stream);
 
@@ -79,7 +79,7 @@ class MediaUtilTest extends TestCase
         self::assertIsString($json = $util->getMeta());
         self::assertJson($json);
 
-        ['filename' => $filename, 'sha256' => $digest] = (array)json_decode($json, true);
+        list('filename' => $filename, 'sha256' => $digest) = (array)json_decode($json, true);
         self::assertEquals($expectedFilename, $filename);
         self::assertEquals($expectedSha256Digest, $digest);
 
@@ -100,7 +100,7 @@ class MediaUtilTest extends TestCase
      * @param string $expectedFilename
      * @param string $expectedSha256Digest
      */
-    public function testSetMeta($file, $stream = null, string $expectedFilename = '', string $expectedSha256Digest = ''): void
+    public function testSetMeta($file, $stream = null, string $expectedFilename = '', string $expectedSha256Digest = '')
     {
         $media = new MediaUtil($file, $stream);
         $json = $media->getMeta();
@@ -113,7 +113,7 @@ class MediaUtilTest extends TestCase
         self::assertArrayHasKey('sha256', $array);
         self::assertArrayNotHasKey('bank_type', $array);
 
-        ['filename' => $filename, 'sha256' => $digest] = $array;
+        list('filename' => $filename, 'sha256' => $digest) = $array;
         self::assertEquals($expectedFilename, $filename);
         self::assertEquals($expectedSha256Digest, $digest);
         self::assertEquals($json, (string)$media->getStream());

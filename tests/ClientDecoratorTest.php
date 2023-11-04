@@ -39,12 +39,12 @@ use PHPUnit\Framework\TestCase;
 
 class ClientDecoratorTest extends TestCase
 {
-    private const FIXTURES = __DIR__ . '/fixtures/mock.%s.%s';
+    const FIXTURES = __DIR__ . '/fixtures/mock.%s.%s';
 
     /** @var int - The maximum clock offset in second */
-    private const MAXIMUM_CLOCK_OFFSET = 300;
+    const MAXIMUM_CLOCK_OFFSET = 300;
 
-    public function testImplementsClientDecoratorInterface(): void
+    public function testImplementsClientDecoratorInterface()
     {
         $map = class_implements(ClientDecorator::class);
 
@@ -56,7 +56,7 @@ class ClientDecoratorTest extends TestCase
         }
     }
 
-    public function testClassUsesTraits(): void
+    public function testClassUsesTraits()
     {
         $traits = class_uses(ClientDecorator::class);
 
@@ -66,14 +66,14 @@ class ClientDecoratorTest extends TestCase
         self::assertContains(\WeChatPay\ClientXmlTrait::class, $traits);
     }
 
-    public function testClassConstants(): void
+    public function testClassConstants()
     {
         self::assertIsString(ClientDecorator::VERSION);
         self::assertIsString(ClientDecorator::XML_BASED);
         self::assertIsString(ClientDecorator::JSON_BASED);
     }
 
-    public function testByReflectionClass(): void
+    public function testByReflectionClass()
     {
         $ref = new ReflectionClass(ClientDecorator::class);
         self::assertInstanceOf(ReflectionClass::class, $ref);
@@ -126,7 +126,7 @@ class ClientDecoratorTest extends TestCase
      * @param array<string,mixed> $config
      * @param string $pattern
      */
-    public function testConstructorExceptions(array $config, string $pattern): void
+    public function testConstructorExceptions(array $config, string $pattern)
     {
         $this->expectException(InvalidArgumentException::class);
         // for PHPUnit8+
@@ -182,7 +182,7 @@ class ClientDecoratorTest extends TestCase
      *
      * @param array<string,mixed> $config
      */
-    public function testSelect(array $config): void
+    public function testSelect(array $config)
     {
         $instance = new ClientDecorator($config);
 
@@ -374,7 +374,7 @@ class ClientDecoratorTest extends TestCase
      */
     public function testRequestsWithMockHandler(
         string $mchid, $privateKey, $publicKey, string $mchSerial, string $platSerial,
-        ResponseInterface $response, string $expectedGuzzleException, string $method, string $uri): void
+        ResponseInterface $response, string $expectedGuzzleException, string $method, string $uri)
     {
         $instance = new ClientDecorator([
             'mchid' => $mchid,
@@ -406,7 +406,7 @@ class ClientDecoratorTest extends TestCase
      */
     public function testAsyncRequestsWithMockHandler(
         string $mchid, $privateKey, $publicKey, string $mchSerial, string $platSerial,
-        ResponseInterface $response, string $expectedGuzzleException, string $method, string $uri): void
+        ResponseInterface $response, string $expectedGuzzleException, string $method, string $uri)
     {
         $instance = new ClientDecorator([
             'mchid' => $mchid,
@@ -454,7 +454,7 @@ class ClientDecoratorTest extends TestCase
      * @param string $mchSerial
      * @param \OpenSSLAsymmetricKey|\OpenSSLCertificate|resource|string|mixed $publicKey
      */
-    private static function verification(RequestInterface $request, string $mchid, string $mchSerial, $publicKey): void
+    private static function verification(RequestInterface $request, string $mchid, string $mchSerial, $publicKey)
     {
         static::assertTrue($request->hasHeader('Authorization'));
 
@@ -560,7 +560,7 @@ class ClientDecoratorTest extends TestCase
      */
     public function testRequest(
         string $mchid, $privateKey, $publicKey, string $mchSerial, string $platSerial,
-        string $method, string $uri, string $expected, callable $respondor): void
+        string $method, string $uri, string $expected, callable $respondor)
     {
         $instance = new ClientDecorator([
             'mchid' => $mchid,
@@ -591,7 +591,7 @@ class ClientDecoratorTest extends TestCase
      */
     public function testRequestAsync(
         string $mchid, $privateKey, $publicKey, string $mchSerial, string $platSerial,
-        string $method, string $uri, string $expected, callable $respondor): void
+        string $method, string $uri, string $expected, callable $respondor)
     {
         $instance = new ClientDecorator([
             'mchid' => $mchid,

@@ -14,9 +14,9 @@ use PHPUnit\Framework\TestCase;
 
 class AesEcbTest extends TestCase
 {
-    private const BASE64_EXPRESSION = '#^[a-zA-Z0-9\+/]+={0,2}$#';
+    const BASE64_EXPRESSION = '#^[a-zA-Z0-9\+/]+={0,2}$#';
 
-    public function testImplementsAesInterface(): void
+    public function testImplementsAesInterface()
     {
         $map = class_implements(AesEcb::class);
 
@@ -28,7 +28,7 @@ class AesEcbTest extends TestCase
         }
     }
 
-    public function testClassConstants(): void
+    public function testClassConstants()
     {
         self::assertIsString(AesEcb::ALGO_AES_256_ECB);
         self::assertIsInt(AesEcb::KEY_LENGTH_BYTE);
@@ -68,7 +68,7 @@ class AesEcbTest extends TestCase
      * @param string $iv
      * @param ?string $excepted
      */
-    public function testEncrypt(string $plaintext, string $key, string $iv, ?string $excepted = null): void
+    public function testEncrypt(string $plaintext, string $key, string $iv, $excepted = null)
     {
         $ciphertext = AesEcb::encrypt($plaintext, $key, $iv);
         self::assertIsString($ciphertext);
@@ -92,7 +92,7 @@ class AesEcbTest extends TestCase
      * @param string $iv
      * @param ?string $ciphertext
      */
-    public function testDecrypt(string $plaintext, string $key, string $iv, ?string $ciphertext = null): void
+    public function testDecrypt(string $plaintext, string $key, string $iv, $ciphertext = null)
     {
         if (is_null($ciphertext)) {
             $ciphertext = AesEcb::encrypt($plaintext, $key, $iv);

@@ -83,9 +83,9 @@ class TransfersTest extends TestCase
      * @param array<string,string> $data
      * @param ResponseInterface $respondor
      */
-    public function testPost(string $mchid, array $data, ResponseInterface $respondor): void
+    public function testPost(string $mchid, array $data, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->prepareEnvironment($mchid);
+        list($endpoint, $stack) = $this->prepareEnvironment($mchid);
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -102,7 +102,7 @@ class TransfersTest extends TestCase
     /**
      * @param ResponseInterface $response
      */
-    private static function responseAssertion(ResponseInterface $response): void
+    private static function responseAssertion(ResponseInterface $response)
     {
         $txt = (string) $response->getBody();
         $array = Transformer::toArray($txt);
@@ -117,9 +117,9 @@ class TransfersTest extends TestCase
      * @param array<string,string> $data
      * @param ResponseInterface $respondor
      */
-    public function testPostAsync(string $mchid, array $data, ResponseInterface $respondor): void
+    public function testPostAsync(string $mchid, array $data, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->prepareEnvironment($mchid);
+        list($endpoint, $stack) = $this->prepareEnvironment($mchid);
 
         $this->mock->reset();
         $this->mock->append($respondor);

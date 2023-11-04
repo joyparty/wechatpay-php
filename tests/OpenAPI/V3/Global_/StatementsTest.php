@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 class StatementsTest extends TestCase
 {
-    private const FIXTURES = 'file://' . __DIR__ . '/../../../fixtures/%s';
+    const FIXTURES = 'file://' . __DIR__ . '/../../../fixtures/%s';
 
     /** @var MockHandler $mock */
     private $mock;
@@ -93,9 +93,9 @@ class StatementsTest extends TestCase
      * @param array<string,mixed> $config
      * @param ResponseInterface $respondor
      */
-    public function testGet(array $config, ResponseInterface $respondor): void
+    public function testGet(array $config, ResponseInterface $respondor)
     {
-        [$endpoint] = $this->newInstance($config);
+        list($endpoint) = $this->newInstance($config);
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -109,7 +109,7 @@ class StatementsTest extends TestCase
     /**
      * @param ResponseInterface $response
      */
-    private static function responseAssertion(ResponseInterface $response): void
+    private static function responseAssertion(ResponseInterface $response)
     {
         self::assertTrue($response->hasHeader('Content-Type'));
         self::assertStringStartsWith('text/plain', $response->getHeaderLine('Content-Type'));
@@ -124,9 +124,9 @@ class StatementsTest extends TestCase
      * @param array<string,mixed> $config
      * @param ResponseInterface $respondor
      */
-    public function testGetAsync(array $config, ResponseInterface $respondor): void
+    public function testGetAsync(array $config, ResponseInterface $respondor)
     {
-        [$endpoint] = $this->newInstance($config);
+        list($endpoint) = $this->newInstance($config);
 
         $this->mock->reset();
         $this->mock->append($respondor);

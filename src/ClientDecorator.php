@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay;
 
@@ -16,9 +18,9 @@ use function defined;
 use const PHP_OS;
 use const PHP_VERSION;
 
+use JoyParty\UriTemplate\UriTemplate;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\UriTemplate\UriTemplate;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -121,7 +123,7 @@ final class ClientDecorator implements ClientDecoratorInterface
     /**
      * @inheritDoc
      */
-    public function select(?string $protocol = null): ClientInterface
+    public function select($protocol = null): ClientInterface
     {
         return $protocol && 0 === strcasecmp(static::XML_BASED, $protocol)
             ? $this->{static::XML_BASED}
@@ -133,7 +135,7 @@ final class ClientDecorator implements ClientDecoratorInterface
      */
     public function request(string $method, string $uri, array $options = []): ResponseInterface
     {
-        [$protocol, $pathname] = self::prepare(UriTemplate::expand($uri, $options));
+        list($protocol, $pathname) = self::prepare(UriTemplate::expand($uri, $options));
 
         return $this->select($protocol)->request($method, $pathname, $options);
     }
@@ -143,7 +145,7 @@ final class ClientDecorator implements ClientDecoratorInterface
      */
     public function requestAsync(string $method, string $uri, array $options = []): PromiseInterface
     {
-        [$protocol, $pathname] = self::prepare(UriTemplate::expand($uri, $options));
+        list($protocol, $pathname) = self::prepare(UriTemplate::expand($uri, $options));
 
         return $this->select($protocol)->requestAsync($method, $pathname, $options);
     }

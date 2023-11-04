@@ -106,10 +106,10 @@ trait ClientJsonTrait
                 ), $request, $response);
             }
 
-            [$nonce] = $response->getHeader(WechatpayNonce);
-            [$serial] = $response->getHeader(WechatpaySerial);
-            [$signature] = $response->getHeader(WechatpaySignature);
-            [$timestamp] = $response->getHeader(WechatpayTimestamp);
+            list($nonce) = $response->getHeader(WechatpayNonce);
+            list($serial) = $response->getHeader(WechatpaySerial);
+            list($signature) = $response->getHeader(WechatpaySignature);
+            list($timestamp) = $response->getHeader(WechatpayTimestamp);
 
             $localTimestamp = Formatter::timestamp();
 

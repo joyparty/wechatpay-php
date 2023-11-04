@@ -14,12 +14,12 @@ use PHPUnit\Framework\TestCase;
 
 class PemUtilTest extends TestCase
 {
-    private const FIXTURES = __DIR__ . '/../fixtures/mock.%s.%s';
+    const FIXTURES = __DIR__ . '/../fixtures/mock.%s.%s';
 
-    private const SUBJECT_CN = 'WeChatPay Community CI';
-    private const SUBJECT_O  = 'WeChatPay Community';
-    private const SUBJECT_ST = 'Shanghai';
-    private const SUBJECT_C  = 'CN';
+    const SUBJECT_CN = 'WeChatPay Community CI';
+    const SUBJECT_O  = 'WeChatPay Community';
+    const SUBJECT_ST = 'Shanghai';
+    const SUBJECT_C  = 'CN';
 
     /** @var array<string,string> */
     private static $certSubject = [
@@ -50,7 +50,7 @@ class PemUtilTest extends TestCase
 
     public function testLoadCertificate(): void
     {
-        [, $certFile] = self::$environment ?? ['', ''];
+        list(, $certFile) = self::$environment ?? ['', ''];
         $cert = PemUtil::loadCertificate($certFile);
         if (8 === PHP_MAJOR_VERSION) {
             self::assertIsObject($cert);
@@ -59,14 +59,14 @@ class PemUtilTest extends TestCase
         }
 
         /** @var string|\OpenSSLCertificate|resource|mixed $cert */
-        ['subject' => $subject, 'issuer' => $issuer] = openssl_x509_parse($cert, false) ?: [];
+        list('subject' => $subject, 'issuer' => $issuer) = openssl_x509_parse($cert, false) ?: [];
         self::assertEquals(self::$certSubject, $subject);
         self::assertEquals(self::$certSubject, $issuer);
     }
 
     public function testLoadCertificateFromString(): void
     {
-        [, , $certString] = self::$environment ?? ['', '', ''];
+        list(, , $certString) = self::$environment ?? ['', '', ''];
         $cert = PemUtil::loadCertificateFromString($certString);
         if (8 === PHP_MAJOR_VERSION) {
             self::assertIsObject($cert);
@@ -75,14 +75,14 @@ class PemUtilTest extends TestCase
         }
 
         /** @var string|\OpenSSLCertificate|resource|mixed $cert */
-        ['subject' => $subject, 'issuer' => $issuer] = openssl_x509_parse($cert, false) ?: [];
+        list('subject' => $subject, 'issuer' => $issuer) = openssl_x509_parse($cert, false) ?: [];
         self::assertEquals(self::$certSubject, $subject);
         self::assertEquals(self::$certSubject, $issuer);
     }
 
     public function testLoadPrivateKey(): void
     {
-        [, , , $privateKeyFile] = self::$environment ?? ['', '', '', ''];
+        list(, , , $privateKeyFile) = self::$environment ?? ['', '', '', ''];
         $privateKey = PemUtil::loadPrivateKey($privateKeyFile);
         if (8 === PHP_MAJOR_VERSION) {
             self::assertIsObject($privateKey);
@@ -93,7 +93,7 @@ class PemUtilTest extends TestCase
 
     public function testLoadPrivateKeyFromString(): void
     {
-        [, , , , $privateKeyString] = self::$environment ?? ['', '', '', '', ''];
+        list(, , , , $privateKeyString) = self::$environment ?? ['', '', '', '', ''];
         $privateKey = PemUtil::loadPrivateKeyFromString($privateKeyString);
         if (8 === PHP_MAJOR_VERSION) {
             self::assertIsObject($privateKey);
@@ -104,7 +104,7 @@ class PemUtilTest extends TestCase
 
     public function testParseCertificateSerialNo(): void
     {
-        [$serialNo, $certFile, $certString, , , $certFileProtocolString] = self::$environment  ?? ['', '', '', '', '', '', ''];
+        list($serialNo, $certFile, $certString, , , $certFileProtocolString) = self::$environment  ?? ['', '', '', '', '', '', ''];
         $serialNoFromPemUtilFile = PemUtil::parseCertificateSerialNo(PemUtil::loadCertificate($certFile));
         $serialNoFromPemUtilString = PemUtil::parseCertificateSerialNo(PemUtil::loadCertificateFromString($certString));
         $serialNoFromCertString = PemUtil::parseCertificateSerialNo($certString);

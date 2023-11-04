@@ -14,18 +14,18 @@ interface ClientDecoratorInterface
     /**
      * @var string - This library version
      */
-    public const VERSION = '1.4.8';
+    const VERSION = '1.4.8';
 
     /**
      * @var string - The HTTP transfer `xml` based protocol
      * @deprecated 1.0 - @see \WeChatPay\Exception\WeChatPayException::DEP_XML_PROTOCOL_IS_REACHABLE_EOL
      */
-    public const XML_BASED = 'v2';
+    const XML_BASED = 'v2';
 
     /**
      * @var string - The HTTP transfer `json` based protocol
      */
-    public const JSON_BASED = 'v3';
+    const JSON_BASED = 'v3';
 
     /**
      * Protocol selector
@@ -33,7 +33,7 @@ interface ClientDecoratorInterface
      * @param string|null $protocol - one of the constants of `XML_BASED`, `JSON_BASED`, default is `JSON_BASED`
      * @return ClientInterface
      */
-    public function select(?string $protocol = null): ClientInterface;
+    public function select($protocol = null): ClientInterface;
 
     /**
      * Request the remote `$uri` by a HTTP `$method` verb

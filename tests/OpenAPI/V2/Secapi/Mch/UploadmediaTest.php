@@ -97,9 +97,9 @@ class UploadmediaTest extends TestCase
      * @param MultipartStream $body
      * @param ResponseInterface $respondor
      */
-    public function testPost(string $mchid, string $secret, MultipartStream $body, ResponseInterface $respondor): void
+    public function testPost(string $mchid, string $secret, MultipartStream $body, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->prepareEnvironment($mchid, $secret);
+        list($endpoint, $stack) = $this->prepareEnvironment($mchid, $secret);
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -116,7 +116,7 @@ class UploadmediaTest extends TestCase
     /**
      * @param ResponseInterface $response
      */
-    private static function responseAssertion(ResponseInterface $response): void
+    private static function responseAssertion(ResponseInterface $response)
     {
         $txt = (string) $response->getBody();
         $array = Transformer::toArray($txt);
@@ -133,9 +133,9 @@ class UploadmediaTest extends TestCase
      * @param MultipartStream $body
      * @param ResponseInterface $respondor
      */
-    public function testPostAsync(string $mchid, string $secret, MultipartStream $body, ResponseInterface $respondor): void
+    public function testPostAsync(string $mchid, string $secret, MultipartStream $body, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->prepareEnvironment($mchid, $secret);
+        list($endpoint, $stack) = $this->prepareEnvironment($mchid, $secret);
 
         $this->mock->reset();
         $this->mock->append($respondor);

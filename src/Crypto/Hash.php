@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay\Crypto;
 
@@ -23,10 +25,10 @@ const ALGO_DICTONARIES = [ALGO_HMAC_SHA256 => 'hmac', ALGO_MD5 => 'md5'];
 class Hash
 {
     /** @var string - hashing `MD5` algorithm */
-    public const ALGO_MD5 = ALGO_MD5;
+    const ALGO_MD5 = ALGO_MD5;
 
     /** @var string - hashing `HMAC-SHA256` algorithm */
-    public const ALGO_HMAC_SHA256 = ALGO_HMAC_SHA256;
+    const ALGO_HMAC_SHA256 = ALGO_HMAC_SHA256;
 
     /**
      * Calculate the input string with an optional secret `key` in MD5,
@@ -71,11 +73,11 @@ class Hash
      * Wrapping the builtins `hash_equals` function.
      *
      * @param string $known_string - The string of known length to compare against.
-     * @param ?string $user_string - The user-supplied string.
+     * @param string|null $user_string - The user-supplied string.
      *
      * @return bool - Returns true when the two are equal, false otherwise.
      */
-    public static function equals(string $known_string, ?string $user_string = null): bool
+    public static function equals(string $known_string, $user_string = null): bool
     {
         return is_null($user_string) ? false : hash_equals($known_string, $user_string);
     }
@@ -87,9 +89,9 @@ class Hash
      * @param string $data - The input data.
      * @param string $key - The secret key string.
      *
-     * @return ?string - The data signature in UPPERCASE.
+     * @return string|null - The data signature in UPPERCASE.
      */
-    public static function sign(string $type, string $data, string $key): ?string
+    public static function sign(string $type, string $data, string $key)
     {
         return array_key_exists($type, ALGO_DICTONARIES) ? strtoupper(static::{ALGO_DICTONARIES[$type]}($data, $key)) : null;
     }

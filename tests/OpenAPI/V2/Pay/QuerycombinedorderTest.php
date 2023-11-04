@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay\Tests\OpenAPI\V2\Pay;
 
@@ -78,9 +80,9 @@ class QuerycombinedorderTest extends TestCase
      * @param array<string,string> $data
      * @param ResponseInterface $respondor
      */
-    public function testPost(string $mchid, string $secret, array $data, ResponseInterface $respondor): void
+    public function testPost(string $mchid, string $secret, array $data, ResponseInterface $respondor)
     {
-        [$endpoint] = $this->prepareEnvironment($mchid, $secret);
+        list($endpoint) = $this->prepareEnvironment($mchid, $secret);
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -92,7 +94,7 @@ class QuerycombinedorderTest extends TestCase
     /**
      * @param ResponseInterface $response
      */
-    private static function responseAssertion(ResponseInterface $response): void
+    private static function responseAssertion(ResponseInterface $response)
     {
         $txt = (string) $response->getBody();
         $array = Transformer::toArray($txt);
@@ -108,9 +110,9 @@ class QuerycombinedorderTest extends TestCase
      * @param array<string,string> $data
      * @param ResponseInterface $respondor
      */
-    public function testPostAsync(string $mchid, string $secret, array $data, ResponseInterface $respondor): void
+    public function testPostAsync(string $mchid, string $secret, array $data, ResponseInterface $respondor)
     {
-        [$endpoint] = $this->prepareEnvironment($mchid, $secret);
+        list($endpoint) = $this->prepareEnvironment($mchid, $secret);
 
         $this->mock->reset();
         $this->mock->append($respondor);

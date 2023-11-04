@@ -74,7 +74,7 @@ trait ClientXmlTrait
      * @return callable(callable(RequestInterface, array))
      * @throws \WeChatPay\Exception\InvalidArgumentException
      */
-    public static function transformRequest(?string $mchid = null, string $secret = '', ?array $merchant = null): callable
+    public static function transformRequest($mchid = null, string $secret = '', $merchant = null): callable
     {
         return static function (callable $handler) use ($mchid, $secret, $merchant): callable {
             return static function (RequestInterface $request, array $options = []) use ($handler, $mchid, $secret, $merchant): PromiseInterface {

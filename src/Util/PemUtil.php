@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay\Util;
 
@@ -17,7 +19,7 @@ use WeChatPay\Crypto\Rsa;
  */
 class PemUtil
 {
-    private const LOCAL_FILE_PROTOCOL = 'file://';
+    private static $localFileProtocol = 'file://';
 
     /**
      * Read private key from file
@@ -29,7 +31,7 @@ class PemUtil
      */
     public static function loadPrivateKey(string $filepath)
     {
-        return Rsa::from((false === strpos($filepath, self::LOCAL_FILE_PROTOCOL) ? self::LOCAL_FILE_PROTOCOL : '') . $filepath);
+        return Rsa::from((false === strpos($filepath, self::$localFileProtocol) ? self::$localFileProtocol : '') . $filepath);
     }
 
     /**
@@ -85,7 +87,7 @@ class PemUtil
      */
     public static function parseCertificateSerialNo($certificate): string
     {
-        $info = openssl_x509_parse($certificate);
+        $info = openssl_x509_parse($certificate, true);
         if (false === $info || !isset($info['serialNumberHex'])) {
             throw new UnexpectedValueException('Read the $certificate failed, please check it whether or nor correct');
         }

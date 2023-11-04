@@ -20,7 +20,7 @@ use Psr\Http\Message\RequestInterface;
 
 class DownloadTest extends TestCase
 {
-    private const FIXTURES = 'file://' . __DIR__ . '/../../../../fixtures/%s';
+    const FIXTURES = 'file://' . __DIR__ . '/../../../../fixtures/%s';
 
     /** @var MockHandler $mock */
     private $mock;
@@ -33,7 +33,7 @@ class DownloadTest extends TestCase
     }
 
     /** @var string The media_slot_url by a community reporting */
-    private const MEDIA_ID = 'ChsyMDAyMDgwMjAyMjAyMTgxMTA0NDEzMTEwMzASGzMwMDIwMDAyMDIyMDIxODE1MDQ0MTcwOTI5NhgAIO%2FFR1pAGKAMwAjgB';
+    const MEDIA_ID = 'ChsyMDAyMDgwMjAyMjAyMTgxMTA0NDEzMTEwMzASGzMwMDIwMDAyMDIyMDIxODE1MDQ0MTcwOTI5NhgAIO%2FFR1pAGKAMwAjgB';
 
     /**
      * @param array<string,mixed> $config
@@ -92,13 +92,13 @@ class DownloadTest extends TestCase
      * @param string $slot
      * @param ResponseInterface $respondor
      */
-    public function testGet(array $config, string $slot, ResponseInterface $respondor): void
+    public function testGet(array $config, string $slot, ResponseInterface $respondor)
     {
         // Note here: using the `UriTemplate` may be caused that, **IT IS NOT SAME TO** the original URI,
         // because the `$slot` is used onto the `signature` algorithm.
         // More @see https://github.com/guzzle/uri-template/issues/18
         // And **NO IDEA** about the platform HOW TO VERIFY the `$slot` while there contains the double pct-encoded characters.
-        [$endpoint, $stack] = $this->newInstance($config, 'assertNotEquals');
+        list($endpoint, $stack) = $this->newInstance($config, 'assertNotEquals');
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -126,7 +126,7 @@ class DownloadTest extends TestCase
     /**
      * @param ResponseInterface $response
      */
-    private static function responseAssertion(ResponseInterface $response): void
+    private static function responseAssertion(ResponseInterface $response)
     {
         self::assertTrue($response->hasHeader('Content-Type'));
         self::assertStringStartsWith('image/', $response->getHeaderLine('Content-Type'));
@@ -138,13 +138,13 @@ class DownloadTest extends TestCase
      * @param string $slot
      * @param ResponseInterface $respondor
      */
-    public function testGetAsync(array $config, string $slot, ResponseInterface $respondor): void
+    public function testGetAsync(array $config, string $slot, ResponseInterface $respondor)
     {
         // Note here: using the `UriTemplate` may be caused that, **IT IS NOT SAME TO** the original URI,
         // because the `$slot` is used onto the `signature` algorithm.
         // More @see https://github.com/guzzle/uri-template/issues/18
         // And **NO IDEA** about the platform HOW TO VERIFY the `$slot` while there contains the double pct-encoded characters.
-        [$endpoint, $stack] = $this->newInstance($config, 'assertNotEquals');
+        list($endpoint, $stack) = $this->newInstance($config, 'assertNotEquals');
 
         $this->mock->reset();
         $this->mock->append($respondor);
@@ -178,9 +178,9 @@ class DownloadTest extends TestCase
      * @param string $slot
      * @param ResponseInterface $respondor
      */
-    public function testUseStandardGuzzleHttpClient(array $config, string $slot, ResponseInterface $respondor): void
+    public function testUseStandardGuzzleHttpClient(array $config, string $slot, ResponseInterface $respondor)
     {
-        [$endpoint, $stack] = $this->newInstance($config, 'assertEquals');
+        list($endpoint, $stack) = $this->newInstance($config, 'assertEquals');
 
         $relativeUrl = 'v3/merchant-service/images/' . $slot;
         $fullUri = 'https://api.mch.weixin.qq.com/' . $relativeUrl;

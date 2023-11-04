@@ -71,7 +71,7 @@ class TransformerTest extends TestCase
      * @param string $xmlString
      * @param string[] $keys
      */
-    public function testToArray(string $xmlString, array $keys): void
+    public function testToArray(string $xmlString, array $keys)
     {
         /** @var string[] $array */
         $array = Transformer::toArray($xmlString);
@@ -79,7 +79,7 @@ class TransformerTest extends TestCase
         self::assertIsArray($array);
         self::assertNotEmpty($array);
 
-        array_map(static function($key) use ($array): void {
+        array_map(static function($key) use ($array) {
             static::assertArrayHasKey($key, $array);
             static::assertIsString($array[$key]);
             static::assertStringNotContainsString('<![CDATA[', $array[$key]);
@@ -107,7 +107,7 @@ class TransformerTest extends TestCase
      * @param string $xmlString
      * @param ?string $pattern
      */
-    public function testToArrayBadPhrases(string $xmlString, ?string $pattern = null): void
+    public function testToArrayBadPhrases(string $xmlString, ?string $pattern = null)
     {
         error_clear_last();
         $array = Transformer::toArray($xmlString);
@@ -196,7 +196,7 @@ class TransformerTest extends TestCase
      * @param string $root
      * @param string $item
      */
-    public function testToXml(array $data, bool $headless, bool $indent, string $root, string $item): void
+    public function testToXml(array $data, bool $headless, bool $indent, string $root, string $item)
     {
         $xml = Transformer::toXml($data, $headless, $indent, $root, $item);
         self::assertIsString($xml);

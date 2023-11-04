@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay\Util;
 
@@ -58,7 +60,7 @@ class MediaUtil
      *                         text/csv whose are the platform acceptable etc.
      * @param ?StreamInterface $fileStream  File content stream, optional
      */
-    public function __construct(string $filepath, ?StreamInterface $fileStream = null)
+    public function __construct(string $filepath, $fileStream = null)
     {
         $this->filepath = $filepath;
         $this->fileStream = $fileStream;
@@ -68,7 +70,7 @@ class MediaUtil
     /**
      * Compose the GuzzleHttp\Psr7\FnStream
      */
-    private function composeStream(): void
+    private function composeStream()
     {
         $basename = basename($this->filepath);
         $stream = $this->fileStream ?? new LazyOpenStream($this->filepath, 'rb');
@@ -132,7 +134,7 @@ class MediaUtil
      * @param ?string $json - The `meta` string
      * @since v1.3.2
      */
-    public function setMeta(?string $json = null): int
+    public function setMeta($json = null): int
     {
         $content = $json ?? (string)json_encode([
             'filename' => basename($this->filepath),

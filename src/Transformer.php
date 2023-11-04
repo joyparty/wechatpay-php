@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay;
 
@@ -90,7 +92,7 @@ class Transformer
      *
      * @param string|array<string,string|\SimpleXMLElement|mixed>|object|\SimpleXMLElement $thing - The value thing reference
      */
-    protected static function value(&$thing): void
+    protected static function value(&$thing)
     {
         is_array($thing) && $thing = static::cast($thing);
         if (is_object($thing) && $thing instanceof SimpleXMLElement) {
@@ -145,7 +147,7 @@ class Transformer
      * @param array<string,string|array|mixed> $data - The data array
      * @param string $item - The nest array identify tag text
      */
-    protected static function walk(XMLWriter &$writer, array $data, string $item): void
+    protected static function walk(XMLWriter &$writer, array $data, string $item)
     {
         foreach ($data as $key => $value) {
             $tag = is_string($key) && static::isElementNameValid($key) ? $key : $item;
@@ -168,7 +170,7 @@ class Transformer
      * @param \XMLWriter $writer - The `XMLWriter` instance reference
      * @param string $thing - The content text
      */
-    protected static function content(XMLWriter &$writer, string $thing = ''): void
+    protected static function content(XMLWriter &$writer, string $thing = '')
     {
         static::needsCdataWrapping($thing) && $writer->writeCdata($thing) || $writer->text($thing);
     }

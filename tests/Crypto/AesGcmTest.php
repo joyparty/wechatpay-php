@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 class AesGcmTest extends TestCase
 {
-    private const BASE64_EXPRESSION = '#^[a-zA-Z0-9\+/]+={0,2}$#';
+    const BASE64_EXPRESSION = '#^[a-zA-Z0-9\+/]+={0,2}$#';
 
-    public function testImplementsAesInterface(): void
+    public function testImplementsAesInterface()
     {
         $map = class_implements(AesGcm::class);
 
@@ -26,7 +26,7 @@ class AesGcmTest extends TestCase
         }
     }
 
-    public function testClassConstants(): void
+    public function testClassConstants()
     {
         self::assertIsString(AesGcm::ALGO_AES_256_GCM);
         self::assertIsInt(AesGcm::KEY_LENGTH_BYTE);
@@ -61,7 +61,7 @@ class AesGcmTest extends TestCase
      * @param string $iv
      * @param string $aad
      */
-    public function testEncrypt(string $plaintext, $key, $iv, $aad): void
+    public function testEncrypt(string $plaintext, $key, $iv, $aad)
     {
         $ciphertext = AesGcm::encrypt($plaintext, $key, $iv, $aad);
         self::assertIsString($ciphertext);
@@ -81,7 +81,7 @@ class AesGcmTest extends TestCase
      * @param string $iv
      * @param string $aad
      */
-    public function testDecrypt(string $plaintext, $key, $iv, $aad): void
+    public function testDecrypt(string $plaintext, $key, $iv, $aad)
     {
         $ciphertext = AesGcm::encrypt($plaintext, $key, $iv, $aad);
         self::assertIsString($ciphertext);

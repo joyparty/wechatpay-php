@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace WeChatPay\Crypto;
 
@@ -26,7 +28,7 @@ class AesGcm implements AesInterface
      *
      * @throws RuntimeException
      */
-    private static function preCondition(): void
+    private static function preCondition()
     {
         if (!in_array(static::ALGO_AES_256_GCM, openssl_get_cipher_methods())) {
             throw new RuntimeException('It looks like the ext-openssl extension missing the `aes-256-gcm` cipher method.');

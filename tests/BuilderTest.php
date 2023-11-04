@@ -20,9 +20,9 @@ use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
 {
-    private const FIXTURES = __DIR__ . '/fixtures/mock.%s.%s';
+    const FIXTURES = __DIR__ . '/fixtures/mock.%s.%s';
 
-    public function testConstractor(): void
+    public function testConstractor()
     {
         if (method_exists($this, 'expectError')) {
             $this->expectError();
@@ -64,7 +64,7 @@ class BuilderTest extends TestCase
      * @param string $mchSerial
      * @param string $platSerial
      */
-    public function testFactory(string $mchid, $privateKey, $publicKey, string $mchSerial, string $platSerial): void
+    public function testFactory(string $mchid, $privateKey, $publicKey, string $mchSerial, string $platSerial)
     {
         $instance = Builder::factory([
             'mchid' => $mchid,

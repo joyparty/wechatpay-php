@@ -25,8 +25,8 @@ use WeChatPay\Formatter;
 
 class UploadTest extends TestCase
 {
-    private const FIXTURES = 'file://' . __DIR__ . '/../../../../fixtures/%s';
-    private const MEDIA_JSON = '{"media_id":"BB04A5DEEFEA18D4F2554C1EDD3B610B.bmp"}';
+    const FIXTURES = 'file://' . __DIR__ . '/../../../../fixtures/%s';
+    const MEDIA_JSON = '{"media_id":"BB04A5DEEFEA18D4F2554C1EDD3B610B.bmp"}';
 
     /** @var MockHandler $mock */
     private $mock;
@@ -95,7 +95,7 @@ class UploadTest extends TestCase
      * @param string $file
      * @param ResponseInterface $respondor
      */
-    public function testPost(array $config, string $file, ResponseInterface $respondor): void
+    public function testPost(array $config, string $file, ResponseInterface $respondor)
     {
         $endpoint = $this->newInstance($config);
         $media = new MediaUtil($file);
@@ -113,7 +113,7 @@ class UploadTest extends TestCase
     /**
      * @param ResponseInterface $response
      */
-    private static function responseAssertion(ResponseInterface $response): void
+    private static function responseAssertion(ResponseInterface $response)
     {
         self::assertTrue($response->hasHeader('Content-Type'));
         self::assertStringStartsWith('application/json', $response->getHeaderLine('Content-Type'));
@@ -126,7 +126,7 @@ class UploadTest extends TestCase
      * @param string $file
      * @param ResponseInterface $respondor
      */
-    public function testPostAsync(array $config, string $file, ResponseInterface $respondor): void
+    public function testPostAsync(array $config, string $file, ResponseInterface $respondor)
     {
         $endpoint = $this->newInstance($config);
         $media = new MediaUtil($file);

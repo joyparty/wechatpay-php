@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 
 class FormatterTest extends TestCase
 {
-    private const LINE_FEED = "\n";
+    const LINE_FEED = "\n";
 
     /**
      * @return array<string,array{int,string}>
@@ -43,7 +43,7 @@ class FormatterTest extends TestCase
     /**
      * @dataProvider nonceRulesProvider
      */
-    public function testNonce(int $size, string $pattern): void
+    public function testNonce(int $size, string $pattern)
     {
         if ($size < 1) {
             $this->expectException(InvalidArgumentException::class);
@@ -70,7 +70,7 @@ class FormatterTest extends TestCase
         }
     }
 
-    public function testTimestamp(): void
+    public function testTimestamp()
     {
         $timestamp = Formatter::timestamp();
         $pattern = '/^1[0-9]{9}/';
@@ -88,7 +88,7 @@ class FormatterTest extends TestCase
         }
     }
 
-    public function testAuthorization(): void
+    public function testAuthorization()
     {
         $value = Formatter::authorization('1001', Formatter::nonce(), 'Cg==', (string) Formatter::timestamp(), 'mockmockmock');
 
@@ -133,7 +133,7 @@ class FormatterTest extends TestCase
     /**
      * @dataProvider requestPhrasesProvider
      */
-    public function testRequest(string $method, string $uri, string $body): void
+    public function testRequest(string $method, string $uri, string $body)
     {
         $value = Formatter::request($method, $uri, (string) Formatter::timestamp(), Formatter::nonce(), $body);
 
@@ -186,7 +186,7 @@ class FormatterTest extends TestCase
     /**
      * @dataProvider responsePhrasesProvider
      */
-    public function testResponse(string $body): void
+    public function testResponse(string $body)
     {
         $value = Formatter::response((string) Formatter::timestamp(), Formatter::nonce(), $body);
 
@@ -223,7 +223,7 @@ class FormatterTest extends TestCase
      * @param string $data
      * @dataProvider joinedByLineFeedPhrasesProvider
      */
-    public function testJoinedByLineFeed(...$data): void
+    public function testJoinedByLineFeed(...$data)
     {
         $value = Formatter::joinedByLineFeed(...$data);
 
@@ -234,7 +234,7 @@ class FormatterTest extends TestCase
         self::assertLessThanOrEqual(substr_count($value, self::LINE_FEED), count($data));
     }
 
-    public function testNoneArgumentPassedToJoinedByLineFeed(): void
+    public function testNoneArgumentPassedToJoinedByLineFeed()
     {
         $value = Formatter::joinedByLineFeed();
 
@@ -295,7 +295,7 @@ class FormatterTest extends TestCase
      * @param array<string,string> $excepted
      * @dataProvider ksortPhrasesProvider
      */
-    public function testKsort(array $thing, array $excepted): void
+    public function testKsort(array $thing, array $excepted)
     {
         self::assertEquals(array_keys($excepted), array_keys(Formatter::ksort($thing)));
         self::assertEquals(array_values($excepted), array_values(Formatter::ksort($thing)));
@@ -368,7 +368,7 @@ class FormatterTest extends TestCase
      * @param string $assertMethod
      * @dataProvider ksortWithDifferentFlagsPharasesProvider
      */
-    public function testKsortWithDifferentFlags(array $input, array $excepted, int $flag, string $assertMethod): void
+    public function testKsortWithDifferentFlags(array $input, array $excepted, int $flag, string $assertMethod)
     {
         self::assertTrue(ksort($input, $flag));
         self::{$assertMethod}(array_keys($excepted), array_keys($input));
@@ -397,7 +397,7 @@ class FormatterTest extends TestCase
      * @param array<string,string> $excepted
      * @dataProvider nativeKsortPhrasesProvider
      */
-    public function testNativeKsort(array $thing, array $excepted): void
+    public function testNativeKsort(array $thing, array $excepted)
     {
         self::assertTrue(ksort($thing));
         self::assertEquals($thing, $excepted);
@@ -437,7 +437,7 @@ class FormatterTest extends TestCase
      * @param string $excepted
      * @dataProvider queryStringLikePhrasesProvider
      */
-    public function testQueryStringLike(array $thing, string $excepted): void
+    public function testQueryStringLike(array $thing, string $excepted)
     {
         $value = Formatter::queryStringLike($thing);
         self::assertIsString($value);
