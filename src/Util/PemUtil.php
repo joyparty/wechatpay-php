@@ -89,7 +89,7 @@ class PemUtil
     {
         $info = openssl_x509_parse($certificate, true);
         if (false === $info || !isset($info['serialNumberHex'])) {
-            throw new UnexpectedValueException('Read the $certificate failed, please check it whether or nor correct');
+            throw new UnexpectedValueException('Read the $certificate failed, error: '.strval(openssl_error_string()).', please check it whether or nor correct');
         }
 
         return strtoupper($info['serialNumberHex']);
